@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import '../modelos/pokemon.dart';
-import 'datos_page.dart';
-import 'agregar_page.dart';
+import 'datos_ambientales_page.dart'; // Asegúrate de tener esta página implementada
+import 'agregar_ambiental_page.dart'; // Asegúrate de tener esta página implementada
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,61 +8,60 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<List<Pokemon>> futurePokemons;
+  List<String> accionesAmbientales = [
+    'Reducir la huella de carbono',
+    'Conservación del agua',
+    'Energías renovables',
+    'Protección de la biodiversidad',
+    'Reciclaje y gestión de residuos',
+    'Reforestación y restauración ecológica',
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    futurePokemons = getList();
-  }
-
-  Future<List<Pokemon>> getList() async {
-    final response = await http.get(
-        Uri.parse('https://7db1-179-19-199-140.ngrok-free.app/pokemons'));
-    if (response.statusCode == 200) {
-      final info = jsonDecode(response.body);
-      return pokemonFromJson(jsonEncode(info));
-    } else {
-      throw Exception('Fallo al traer los datos');
-    }
-  }
-
-  void _navigateToAddPokemon() {
+  void _navigateToAddAccionAmbiental() {
+    // Aquí podrías agregar la lógica para navegar a la página de agregar acciones
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => AgregarPage()),
-    ).then((_) {
-      // Cuando regresamos de AgregarPage, actualizamos la lista de pokemons
-      setState(() {
-        futurePokemons = getList();
-      });
-    });
+      MaterialPageRoute(builder: (context) => AgregarAmbientalPage()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.green[50], // Color de fondo suave, relacionado con la naturaleza
       appBar: AppBar(
-        title: Text('Agregar Pokemons'),
+        title: Text(
+          'Conciencia Ambiental',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green[700], // Verde oscuro para el AppBar
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: _navigateToAddPokemon,
+            color: Colors.white, // Icono blanco para contraste
+            onPressed: _navigateToAddAccionAmbiental,
           ),
         ],
       ),
-      body: FutureBuilder<List<Pokemon>>(
-        future: futurePokemons,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
-            return DatosPage(pokemons: snapshot.data!);
-          } else {
-            return Center(child: Text('No se encontraron Pokémons'));
-          }
-        },
+      body: accionesAmbientales.isNotEmpty
+          ? ListView.builder(
+              itemCount: accionesAmbientales.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(accionesAmbientales[index]),
+                  leading: Icon(Icons.eco, color: Colors.green),
+                );
+              },
+            )
+          : Center(
+              child: Text(
+                'No se encontraron acciones',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+            ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green[700],
+        onPressed: _navigateToAddAccionAmbiental,
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

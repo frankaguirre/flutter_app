@@ -44,8 +44,13 @@ class _AgregarPageState extends State<AgregarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.green[50], // Fondo verde suave
       appBar: AppBar(
-        title: Text('Agregar Pokémon'),
+        title: Text(
+          'Agregar Datos',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green[700], // Verde oscuro
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -55,35 +60,99 @@ class _AgregarPageState extends State<AgregarPage> {
             children: <Widget>[
               TextField(
                 controller: _nombreController,
-                decoration: InputDecoration(labelText: 'Nombre'),
+                decoration: InputDecoration(
+                  labelText: 'Nombre',
+                  labelStyle: TextStyle(color: Colors.green[900]),
+                  filled: true,
+                  fillColor: Colors.white, // Fondo blanco para los inputs
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
+              SizedBox(height: 10),
               TextField(
                 controller: _tipoController,
-                decoration: InputDecoration(labelText: 'Tipo'),
+                decoration: InputDecoration(
+                  labelText: 'Tipo',
+                  labelStyle: TextStyle(color: Colors.green[900]),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
+              SizedBox(height: 10),
               TextField(
                 controller: _psController,
-                decoration: InputDecoration(labelText: 'PS'),
+                decoration: InputDecoration(
+                  labelText: 'PS',
+                  labelStyle: TextStyle(color: Colors.green[900]),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
+              SizedBox(height: 10),
               TextField(
                 controller: _ataqueController,
-                decoration: InputDecoration(labelText: 'Ataque'),
+                decoration: InputDecoration(
+                  labelText: 'Ataque',
+                  labelStyle: TextStyle(color: Colors.green[900]),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
+              SizedBox(height: 10),
               TextField(
                 controller: _defensaController,
-                decoration: InputDecoration(labelText: 'Defensa'),
+                decoration: InputDecoration(
+                  labelText: 'Defensa',
+                  labelStyle: TextStyle(color: Colors.green[900]),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
+              SizedBox(height: 10),
               TextField(
                 controller: _fotoController,
-                decoration: InputDecoration(labelText: 'URL de la Foto'),
+                decoration: InputDecoration(
+                  labelText: 'URL de la Foto',
+                  labelStyle: TextStyle(color: Colors.green[900]),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
               ),
               SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green[700], // Color verde para el botón
+                  onPrimary: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12), // Botones redondeados
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                ),
                 onPressed: _guardarPokemon,
-                child: Text('Guardar'),
+                child: Text(
+                  'Guardar',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
             ],
           ),
