@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'package:flutter_application_10/wiggets/carga_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,7 +10,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   void _iniciarSesion() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => CargaPage()),
     );
   }
 

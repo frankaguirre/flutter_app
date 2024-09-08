@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/wiggets/login_page.dart';
+import 'package:provider/provider.dart'; // Asegúrate de que esto esté en el pubspec.yaml
 
+import 'wiggets/aportes.dart';
+import 'wiggets/login_page.dart'; // Asegúrate de que la ruta sea correcta
 
 
 void main() {
@@ -11,14 +12,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Conciencia ambiental',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        scaffoldBackgroundColor: Color.fromARGB(255, 146, 131, 131),
+    return ChangeNotifierProvider(
+      create: (context) => AportesProvider(),
+      child: MaterialApp(
+        home: LoginPage(), // Cambia esto si tienes una página de inicio diferente
       ),
-      home: LoginPage(),
     );
   }
 }
