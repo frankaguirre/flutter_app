@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'package:flutter_application_10/wiggets/carga_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,12 +8,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _nombreController = TextEditingController();
-  final _edadController = TextEditingController();
-
   void _iniciarSesion() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => CargaPage()),
     );
   }
 
@@ -48,27 +46,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 20),
-              TextField(
-                controller: _nombreController,
-                decoration: InputDecoration(
-                  labelText: 'Nombre',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  prefixIcon: Icon(Icons.nature, color: Colors.green),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: _edadController,
-                decoration: InputDecoration(
-                  labelText: 'Edad',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  prefixIcon: Icon(Icons.eco, color: Colors.green),
-                ),
-                keyboardType: TextInputType.number, // Solo números para la edad
+              // Reemplaza los campos de entrada con una imagen
+              Container(
+                width: 150,
+                height: 150,
+                child: Image.asset('assets/image/descarga.png', fit: BoxFit.cover),
               ),
               SizedBox(height: 20),
               ElevatedButton(

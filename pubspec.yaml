@@ -30,8 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.1.0
-  shared_preferences: ^2.0.12
+  font_awesome_flutter: ^10.0.0
+  provider: ^6.0.3
+  flutter_riverpod: ^1.0.0
+
 http:
 
   # The following adds the Cupertino Icons font to your application.
@@ -52,9 +54,17 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/image/logo.png"
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/image/descarga.png
+    - assets/image/a.png
+    - assets/image/reciclaje.gif
+    - assets/image/b.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
