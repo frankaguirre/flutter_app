@@ -7,10 +7,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _nombreController = TextEditingController();
+  final _edadController = TextEditingController();
 
-  void _login() {
+  void _iniciarSesion() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => HomePage()),
     );
@@ -19,20 +19,20 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.green[50], // Fondo verde claro
       body: Center(
         child: Container(
-          width: 300, // Ancho del contenedor
+          width: 300,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.green.withOpacity(0.5), // Sombra verde
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: Offset(0, 3), // Cambia la posición de la sombra
+                offset: Offset(0, 3),
               ),
             ],
           ),
@@ -40,42 +40,42 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Entrada pokedex',
+                'Inicia tu viaje verde',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 180, 31, 11),
+                  color: Colors.green[700],
                 ),
               ),
               SizedBox(height: 20),
               TextField(
-                controller: _emailController,
+                controller: _nombreController,
                 decoration: InputDecoration(
-                  labelText: 'nombre',
+                  labelText: 'Nombre',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  prefixIcon: Icon(Icons.add_road),
+                  prefixIcon: Icon(Icons.nature, color: Colors.green),
                 ),
               ),
               SizedBox(height: 20),
               TextField(
-                controller: _passwordController,
+                controller: _edadController,
                 decoration: InputDecoration(
-                  labelText: 'edad',
+                  labelText: 'Edad',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                 prefixIcon: Icon(Icons.add_road),
+                  prefixIcon: Icon(Icons.eco, color: Colors.green),
                 ),
-                obscureText: true,
+                keyboardType: TextInputType.number, // Solo números para la edad
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _login,
-                child: Text('iniciar'),
+                onPressed: _iniciarSesion,
+                child: Text('Comenzar'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 184, 134, 125),
+                  backgroundColor: Colors.green[700], // Botón verde
                   padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   textStyle: TextStyle(
                     fontSize: 18,
