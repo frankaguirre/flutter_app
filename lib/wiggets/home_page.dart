@@ -59,7 +59,7 @@ class HomePage1 extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               itemCount: 4,
               itemBuilder: (context, index) {
-                final titles = ['1-Recolección', '2-Reciclaje', '3-Reforestar', '4-Motivar'];
+                final titles = ['2-Reciclaje', '1-Recolecion', '3-Reforestar', '4-Motivar'];
                 return GestureDetector(
                   onTap: () => _navigateToPage(context, index + 1),
                   child: Container(
