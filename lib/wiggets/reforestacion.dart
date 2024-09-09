@@ -9,20 +9,22 @@ class PotGamePage extends StatefulWidget {
 class _PotGamePageState extends State<PotGamePage> {
   final List<Flower> _flowers = [];
   int _score = 0;
+  static const int _maxFlowers = 3;
   Timer? _growthTimer;
-  static const double _pixelSize = 5.0; // Tamaño de píxel más pequeño para estilo más detallado
-  static const double _potWidth = 50.0; // Ancho de la maceta
-  static const double _potHeight = 30.0; // Altura de la maceta
+  Timer? _lifeTimer;
+  static const double _pixelSize = 5.0;
+  static const double _potWidth = 50.0;
+  static const double _potHeight = 30.0;
 
   @override
   void initState() {
     super.initState();
     _startGrowthTimer();
+    _startLifeTimer();
   }
 
-  // Inicia el temporizador que controla el crecimiento de las flores
   void _startGrowthTimer() {
-    _growthTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _growthTimer = Timer.periodic(Duration(seconds: 60), (timer) {
       setState(() {
         for (var flower in _flowers) {
           flower.grow();
@@ -34,28 +36,36 @@ class _PotGamePageState extends State<PotGamePage> {
     });
   }
 
-  // Añadir una nueva flor en la posición donde el usuario toque
-  void _addFlower(Offset position) {
-    setState(() {
-      _flowers.add(Flower(position: position));
+  void _startLifeTimer() {
+    _lifeTimer = Timer.periodic(Duration(minutes: 3), (timer) {
+      setState(() {
+        _flowers.removeWhere((flower) => flower.lifetimeExpired);
+      });
     });
   }
 
-  // Aplicar fertilizante para acelerar el crecimiento
+  void _addFlower(Offset position) {
+    if (_flowers.length < _maxFlowers) {
+      setState(() {
+        _flowers.add(Flower(position: position));
+      });
+    }
+  }
+
   void _applyFertilizer(Flower flower) {
     setState(() {
       flower.applyFertilizer();
     });
   }
 
-  // Regar la flor para que dure más tiempo
   void _waterFlower(Flower flower) {
     setState(() {
-      flower.water();
+      if (flower.canWater) {
+        flower.water();
+      }
     });
   }
 
-  // Replantar una flor (la remueve y vuelve a plantar en la misma posición)
   void _replant(Flower flower) {
     setState(() {
       _flowers.remove(flower);
@@ -63,13 +73,19 @@ class _PotGamePageState extends State<PotGamePage> {
     });
   }
 
+  void _removeFlower(Flower flower) {
+    setState(() {
+      _flowers.remove(flower);
+    });
+  }
+
   @override
   void dispose() {
     _growthTimer?.cancel();
+    _lifeTimer?.cancel();
     super.dispose();
   }
 
-  // Dibuja la maceta usando píxeles
   Widget _buildPot(Offset position) {
     return Positioned(
       left: position.dx - _potWidth / 2,
@@ -79,15 +95,32 @@ class _PotGamePageState extends State<PotGamePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _pixel(Colors.brown[700]!, 6), // Maceta izquierda
-              _pixel(Colors.brown[600]!, 6), // Maceta centro
-              _pixel(Colors.brown[700]!, 6), // Maceta derecha
+              _pixel(Colors.brown[700]!, 6),
+              _pixel(Colors.brown[600]!, 6),
+              _pixel(Colors.brown[700]!, 6),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _pixel(Colors.brown[800]!, 18), // Base de la maceta
+              _pixel(Colors.brown[800]!, 18),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: Icon(Icons.opacity),
+                onPressed: () => _waterFlower(_flowers.firstWhere((f) => f.position == position)),
+              ),
+              IconButton(
+                icon: Icon(Icons.local_florist),
+                onPressed: () => _applyFertilizer(_flowers.firstWhere((f) => f.position == position)),
+              ),
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () => _removeFlower(_flowers.firstWhere((f) => f.position == position)),
+              ),
             ],
           ),
         ],
@@ -95,53 +128,37 @@ class _PotGamePageState extends State<PotGamePage> {
     );
   }
 
-  // Dibuja las flores en estilo pixelado con más detalles
   Widget _buildFlower(Flower flower) {
     List<Widget> pixels = [];
 
     if (flower.growthStage == 0) {
-      // Etapa 0: Semilla pequeña (1 píxel marrón oscuro)
-      pixels = [
-        _pixel(Colors.brown[800]!, 1),
-      ];
+      pixels = [_pixel(Colors.brown[800]!, 1)];
     } else if (flower.growthStage == 1) {
-      // Etapa 1: Brote (varios píxeles verdes)
-      pixels = [
-        _pixel(Colors.green[900]!, 1),
-        _pixel(Colors.green[800]!, 1),
-      ];
+      pixels = [_pixel(Colors.green[900]!, 1), _pixel(Colors.green[800]!, 1)];
     } else if (flower.growthStage == 2) {
-      // Etapa 2: Planta media (más píxeles verdes)
       pixels = [
         _pixel(Colors.green[900]!, 1),
         _pixel(Colors.green[800]!, 1),
         _pixel(Colors.green[700]!, 1),
       ];
     } else {
-      // Etapa 3: Flor completa (píxeles verdes y amarillos)
       pixels = [
         _pixel(Colors.green[900]!, 1),
         _pixel(Colors.green[800]!, 1),
         _pixel(Colors.yellow[700]!, 2),
-        _pixel(Colors.green[700]!, 1),
+        _pixel(Colors.white, 2),
       ];
     }
 
     return Positioned(
       left: flower.position.dx - _pixelSize / 2,
       top: flower.position.dy - _pixelSize * 5,
-      child: GestureDetector(
-        onTap: () => _applyFertilizer(flower),
-        onLongPress: () => _waterFlower(flower),
-        onDoubleTap: () => _replant(flower),
-        child: Column(
-          children: pixels,
-        ),
+      child: Column(
+        children: pixels,
       ),
     );
   }
 
-  // Crear un píxel cuadrado de color
   Widget _pixel(Color color, int sizeMultiplier) {
     return Container(
       width: _pixelSize * sizeMultiplier.toDouble(),
@@ -159,20 +176,6 @@ class _PotGamePageState extends State<PotGamePage> {
       ),
       body: Stack(
         children: [
-          // Fondo con cuadrícula para estilo pixelado
-          GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 50, // Número de píxeles por fila
-              crossAxisSpacing: 1,
-              mainAxisSpacing: 1,
-            ),
-            itemBuilder: (context, index) => Container(
-              color: Colors.green[100],
-              width: _pixelSize,
-              height: _pixelSize,
-            ),
-            itemCount: 2500, // Total de píxeles para el fondo
-          ),
           GestureDetector(
             onTapUp: (details) {
               _addFlower(details.localPosition);
@@ -184,14 +187,12 @@ class _PotGamePageState extends State<PotGamePage> {
               ),
             ),
           ),
-          // Mostrar las flores y macetas en la pantalla
           ..._flowers.map((flower) => Stack(
             children: [
-              _buildPot(flower.position), // Dibujar la maceta
-              _buildFlower(flower), // Dibujar la flor
+              _buildPot(flower.position),
+              _buildFlower(flower),
             ],
           )),
-          // Mostrar el puntaje actual en la esquina superior derecha
           Positioned(
             top: 20,
             right: 20,
@@ -206,32 +207,35 @@ class _PotGamePageState extends State<PotGamePage> {
   }
 }
 
-// Clase para manejar las flores
 class Flower {
-  final Offset position; // Posición donde la flor está plantada
-  int growthStage = 0; // Etapas de crecimiento: 0 - semilla, 1 - brote, 2 - flor completa
+  final Offset position;
+  int growthStage = 0;
   bool isWatered = false;
   bool isFertilized = false;
+  DateTime _plantTime = DateTime.now();
 
   Flower({required this.position});
 
-  // Lógica para el crecimiento de la flor
+  bool get lifetimeExpired => DateTime.now().difference(_plantTime).inMinutes >= 3;
+
+  bool get canWater => DateTime.now().difference(_plantTime).inMinutes >= 2;
+
   void grow() {
     if (growthStage < 3) {
       growthStage++;
     }
   }
 
-  // Aplicar fertilizante para acelerar el crecimiento
   void applyFertilizer() {
-    if (growthStage < 3) {
+    if (!isFertilized) {
       growthStage++;
+      isFertilized = true;
     }
   }
 
-  // Regar la flor para que dure más tiempo o crezca más rápido
   void water() {
-    isWatered = true;
+    if (canWater) {
+      _plantTime = _plantTime.add(Duration(seconds: 30));
+    }
   }
 }
-
