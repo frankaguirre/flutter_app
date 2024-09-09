@@ -38,7 +38,7 @@ class _Page4State extends State<Page4> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Image.asset('assets/image/page2_image.png', width: 500, height: 250),
+            child: Image.asset('assets/image/movitar.png', width: 500, height: 250),
           ),
           SizedBox(height: 20),
           Padding(
@@ -64,7 +64,7 @@ class _Page4State extends State<Page4> {
 
 "Cada vez que reciclas, reduces la cantidad de residuos que el planeta tiene que soportar."
               ,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 12),
             ),
           ),
           SizedBox(height: 20),
