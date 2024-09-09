@@ -9,11 +9,6 @@ class PotGamePage extends StatefulWidget {
 class _PotGamePageState extends State<PotGamePage> {
   List<Flower> flowers = [];
   final int _maxFlowers = 3;
-  final int _flowerLife = 180; // Vida útil de 3 minutos en segundos
-  final int _wateringBoost = 30; // 30 segundos de vida extra
-  final int _wateringCooldown = 120; // 2 minutos de reutilización del riego
-  final int _wateringDuration = 60; // Duración en segundos para agregar agua
-  final int _fertilizerBoost = 1; // Incremento de píxeles por fertilizante
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +20,10 @@ class _PotGamePageState extends State<PotGamePage> {
       body: Stack(
         children: [
           Container(color: Colors.green[100]), // Fondo verde
-          for (Flower flower in flowers) _buildPot(flower),
-          _buildActionButtons(),
+          for (Flower flower in flowers)
+            _buildPot(flower),
+          if (flowers.length < _maxFlowers) _buildAddFlowerButton(),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (flowers.length < _maxFlowers) {
-            setState(() {
-              flowers.add(Flower(position: Offset(150, 300)));
-              _startFlowerTimer(flowers.last);
-            });
-          }
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.green,
       ),
     );
   }
@@ -60,9 +44,10 @@ class _PotGamePageState extends State<PotGamePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (flower.growthStage >= 3) _buildFlower(flower),
+            _buildPotShape(),
             if (flower.growthStage >= 2) _buildStem(),
-            if (flower.growthStage >= 1) _buildPotShape(),
+            if (flower.growthStage >= 3) _buildFlower(flower),
+            _buildActionButtons(flower),
           ],
         ),
       ),
@@ -70,33 +55,19 @@ class _PotGamePageState extends State<PotGamePage> {
   }
 
   Widget _buildFlower(Flower flower) {
-    if (flower.growthStage == 3) {
-      return Container(
-        width: 50,
-        height: 50,
-        color: const Color.fromARGB(255, 238, 234, 236),
-        margin: EdgeInsets.only(bottom: 5),
-        child: Center(
-          child: Container(
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color.fromARGB(255, 236, 240, 6),
-            ),
-          ),
+    return Container(
+      width: flower.growthStage == 3 ? 50 : 30,
+      height: flower.growthStage == 3 ? 50 : 30,
+      color: flower.growthStage == 3 ? Color.fromARGB(255, 230, 124, 4) : Color.fromARGB(255, 231, 244, 54),
+      margin: EdgeInsets.only(bottom: 5),
+      child: flower.growthStage == 3 ? Center(
+        child: Container(
+          width: 10,
+          height: 10,
+          
         ),
-      );
-    } else if (flower.growthStage == 2) {
-      return Container(
-        width: 30,
-        height: 30,
-        color: const Color.fromARGB(255, 231, 244, 54),
-        margin: EdgeInsets.only(bottom: 5),
-      );
-    } else {
-      return Container();
-    }
+      ) : null,
+    );
   }
 
   Widget _buildStem() {
@@ -110,11 +81,11 @@ class _PotGamePageState extends State<PotGamePage> {
 
   Widget _buildPotShape() {
     return Container(
-      width: 50,
-      height: 50,
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: const Color.fromARGB(255, 212, 59, 3),
+        color: Color.fromARGB(255, 243, 240, 239),
       ),
       child: Center(
         child: Container(
@@ -122,49 +93,40 @@ class _PotGamePageState extends State<PotGamePage> {
           height: 10,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.white,
+            color: Color.fromARGB(255, 246, 250, 7),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildActionButtons() {
-    return Positioned(
-      bottom: 20,
-      right: 20,
+  Widget _buildActionButtons(Flower flower) {
+    return Container(
+      width: 144,
+      height: 144, // Altura ajustada para botones
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
             icon: Icon(Icons.opacity), // Ícono de regar
-            onPressed: () {
+            onPressed: flower.canWater ? () {
               setState(() {
-                for (var flower in flowers) {
-                  if (flower.canWater) {
-                    flower.addWater(_wateringBoost, _wateringCooldown);
-                  }
-                }
+                flower.addWater();
               });
-            },
+            } : null,
           ),
           IconButton(
             icon: Icon(Icons.local_florist), // Ícono de fertilizar
-            onPressed: () {
+            onPressed: !flower.hasFertilized && flower.growthStage == 1 ? () {
               setState(() {
-                for (var flower in flowers) {
-                  if (flower.growthStage < 3 && !flower.hasFertilized) {
-                    flower.addFertilizer(_fertilizerBoost);
-                  }
-                }
+                flower.fertilize();
               });
-            },
+            } : null,
           ),
           IconButton(
             icon: Icon(Icons.delete), // Ícono de eliminar planta
             onPressed: () {
               setState(() {
-                flowers.clear();
+                flowers.remove(flower);
               });
             },
           ),
@@ -173,42 +135,57 @@ class _PotGamePageState extends State<PotGamePage> {
     );
   }
 
-  void _startFlowerTimer(Flower flower) {
-    flower.timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        flower.life -= 1;
-        if (flower.life <= 0) {
-          flower.life = 0;
-          flowers.remove(flower);
-          timer.cancel();
-        }
-      });
-    });
+  Widget _buildAddFlowerButton() {
+    return Positioned(
+      bottom: 20,
+      right: 20,
+      child: FloatingActionButton(
+        onPressed: () {
+          if (flowers.length < _maxFlowers) {
+            setState(() {
+              flowers.add(Flower(position: Offset(150, 300)));
+            });
+          }
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 }
 
 class Flower {
   Offset position;
-  int growthStage = 1; // Inicialmente crece desde la etapa 1
+  int growthStage = 3; // Inicialmente con todos los componentes
   int life = 180; // Vida útil de 3 minutos en segundos
   bool canWater = true;
   bool hasFertilized = false;
   Timer? timer;
 
-  Flower({required this.position});
+  Flower({required this.position}) {
+    _startFlowerTimer();
+  }
 
-  void addWater(int boost, int cooldown) {
-    life = (life + boost).clamp(0, 180);
+  void addWater() {
+    life = (life + 30).clamp(0, 180);
     canWater = false;
-    Timer(Duration(seconds: cooldown), () {
+    Timer(Duration(seconds: 120), () {
       canWater = true;
     });
   }
 
-  void addFertilizer(int boost) {
-    if (!hasFertilized) {
-      growthStage = (growthStage + boost).clamp(1, 3);
-      hasFertilized = true;
-    }
+  void fertilize() {
+    growthStage = 3;
+    hasFertilized = true;
+  }
+
+  void _startFlowerTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      life -= 1;
+      if (life <= 0) {
+        life = 0;
+        timer.cancel();
+      }
+    });
   }
 }
