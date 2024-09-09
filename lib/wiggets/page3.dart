@@ -48,7 +48,7 @@ class _Page3State extends State<Page3> {
               "Reforestación: La reforestación es un esfuerzo fundamental para restaurar nuestros ecosistemas y combatir el cambio climático. Plantar árboles ayuda a mejorar la calidad del aire, conservar el agua y proporcionar hábitats para la fauna silvestre. Además, contribuye a la lucha contra la erosión del suelo y promueve la biodiversidad. Cada árbol plantado es un paso hacia un planeta más saludable"
 
 "¡Dame tus ideas! ¿Cómo puedes contribuir a la reforestación en tu comunidad o en tu entorno? Comparte tus ideas y trabajemos juntos para restaurar nuestros bosques y proteger el medio ambiente",
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 14),
             ),
           ),
           SizedBox(height: 20),

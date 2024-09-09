@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/wiggets/intro.dart';
 import 'package:provider/provider.dart';
 import 'aportes.dart';
 import 'basura.dart'; // Importa el widget BasuraGame
@@ -31,22 +32,29 @@ class _Page2State extends State<Page2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Página 2 - Reciclaje'),
+        title: Text('Página 1 - Recolecion'),
         backgroundColor: Colors.green[700],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Image.asset('assets/image/r.png', width: 500, height: 250),
+            child: Image.asset('assets/image/derr.png', width: 300, height: 150),
           ),
           SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              "Reciclaje: El reciclaje es el proceso de transformar materiales usados en nuevos productos, reduciendo así la necesidad de recursos naturales y minimizando los residuos. Al reciclar, ayudamos a conservar el medio ambiente, disminuimos la contaminación y promovemos la sostenibilidad.\n\n"
-              "¡Dame tus ideas! ¿Tienes ideas sobre cómo mejorar el reciclaje en tu comunidad o en tu vida diaria? Compártelas con nosotros y juntos hagamos una diferencia.",
-              style: TextStyle(fontSize: 16),
+              "La recolección adecuada de residuos es fundamental para preservar nuestro medio ambiente y reducir la contaminación. Con tu participación activa, podemos mejorar la gestión y clasificación de desechos, fomentando la reutilización y el reciclaje"
+
+"Aquí te presentamos algunas ideas para optimizar la recolección de residuos:"
+
+"Implementa sistemas de separación de residuos en tu comunidad: Facilita la clasificación de materiales reciclables y no reciclables"
+"Promueve campañas educativas: Informa a los ciudadanos sobre la importancia de la separación de residuos y la correcta disposición de cada tipo de material"
+"Instala puntos de recolección en lugares clave: Ubica contenedores en áreas accesibles para facilitar la entrega de residuos reciclables"
+"Organiza eventos de limpieza comunitaria: Incentiva la participación de la comunidad en la recolección de desechos en espacios públicos"
+              ,
+              style: TextStyle(fontSize: 13),
             ),
           ),
           SizedBox(height: 20),
@@ -66,7 +74,7 @@ class _Page2State extends State<Page2> {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => BasuraGame()),
+                MaterialPageRoute(builder: (context) => InstructionsPage ()),
               );
             },
             child: Text('Jugar al mini-juego'),
