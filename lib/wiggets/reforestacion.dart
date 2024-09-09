@@ -1,5 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class PotGamePage extends StatefulWidget {
   @override
@@ -7,142 +7,13 @@ class PotGamePage extends StatefulWidget {
 }
 
 class _PotGamePageState extends State<PotGamePage> {
-  final List<Flower> _flowers = [];
-  Timer? _growthTimer;
-  int _maxFlowers = 3; // Máximo de tres flores simultáneas
-  int _score = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _startGrowthTimer();
-  }
-
-  // Inicia el temporizador para que las flores crezcan cada 1 minuto
-  void _startGrowthTimer() {
-    _growthTimer = Timer.periodic(Duration(seconds: 60), (timer) {
-      setState(() {
-        for (var flower in _flowers) {
-          flower.grow();
-        }
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _growthTimer?.cancel();
-    super.dispose();
-  }
-
-  // Crear la maceta cuadrada roja y dibujar la flor en su etapa
-  Widget _buildPot(Flower flower) {
-    return Positioned(
-      left: flower.position.dx - 25, // Centrar la maceta
-      top: flower.position.dy,
-      child: Column(
-        children: [
-          // Flor sobre la maceta
-          _buildFlower(flower),
-          // Maceta cuadrada roja
-          Container(
-            width: 50,
-            height: 50,
-            color: Colors.red,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Dibuja la flor con el cuerpo verde, centro amarillo y pétalos blancos
-  Widget _buildFlower(Flower flower) {
-    if (flower.growthStage == 0) {
-      return Container(); // No hay flor al principio
-    } else if (flower.growthStage == 1) {
-      // Cuerpo verde de la flor
-      return Container(
-        width: 10,
-        height: 30,
-        color: Colors.green,
-      );
-    } else if (flower.growthStage == 2) {
-      // Cuerpo verde con centro amarillo
-      return Column(
-        children: [
-          Container(width: 10, height: 30, color: Colors.green),
-          Container(width: 20, height: 20, color: Colors.yellow),
-        ],
-      );
-    } else {
-      // Cuerpo verde, centro amarillo y pétalos blancos
-      return Column(
-        children: [
-          Container(width: 10, height: 30, color: Colors.green),
-          Container(width: 20, height: 20, color: Colors.yellow),
-          Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      );
-    }
-  }
-
-  // Agregar los iconos para regar, abonar, y usar la pala
-  Widget _buildActionButtons(Flower flower) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          icon: Icon(Icons.water_drop),
-          onPressed: () => _waterFlower(flower),
-        ),
-        IconButton(
-          icon: Icon(Icons.local_florist),
-          onPressed: () => _applyFertilizer(flower),
-        ),
-        IconButton(
-          icon: Icon(Icons.delete),
-          onPressed: () => _removeFlower(flower),
-        ),
-      ],
-    );
-  }
-
-  // Función para agregar una flor
-  void _addFlower(Offset position) {
-    if (_flowers.length < _maxFlowers) {
-      setState(() {
-        _flowers.add(Flower(position: position));
-      });
-    }
-  }
-
-  // Función para regar una flor (añadir tiempo de vida)
-  void _waterFlower(Flower flower) {
-    setState(() {
-      flower.addLife(30); // Añadir 30 segundos de vida
-    });
-  }
-
-  // Función para aplicar fertilizante (crecimiento instantáneo)
-  void _applyFertilizer(Flower flower) {
-    setState(() {
-      flower.grow();
-    });
-  }
-
-  // Función para remover una flor y maceta
-  void _removeFlower(Flower flower) {
-    setState(() {
-      _flowers.remove(flower);
-    });
-  }
+  List<Flower> flowers = [];
+  final int _maxFlowers = 3;
+  final int _flowerLife = 180; // Vida útil de 3 minutos en segundos
+  final int _wateringBoost = 30; // 30 segundos de vida extra
+  final int _wateringCooldown = 120; // 2 minutos de reutilización del riego
+  final int _wateringDuration = 60; // Duración en segundos para agregar agua
+  final int _fertilizerBoost = 1; // Incremento de píxeles por fertilizante
 
   @override
   Widget build(BuildContext context) {
@@ -153,46 +24,191 @@ class _PotGamePageState extends State<PotGamePage> {
       ),
       body: Stack(
         children: [
-          // Fondo verde para la pantalla
-          Container(color: Colors.green[100]),
-          // Mostrar las flores y macetas
-          for (var flower in _flowers)
-            ...[
-              _buildPot(flower),
-              Positioned(
-                left: flower.position.dx - 25,
-                top: flower.position.dy + 60,
-                child: _buildActionButtons(flower),
-              ),
-            ],
+          Container(color: Colors.green[100]), // Fondo verde
+          for (Flower flower in flowers) _buildPot(flower),
+          _buildActionButtons(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addFlower(Offset(150, 300)), // Añadir flor en una posición
+        onPressed: () {
+          if (flowers.length < _maxFlowers) {
+            setState(() {
+              flowers.add(Flower(position: Offset(150, 300)));
+              _startFlowerTimer(flowers.last);
+            });
+          }
+        },
         child: Icon(Icons.add),
         backgroundColor: Colors.green,
       ),
     );
   }
-}
 
-// Clase para manejar las flores
-class Flower {
-  final Offset position;
-  int growthStage = 0; // Etapas: 0 - sin flor, 1 - cuerpo verde, 2 - centro amarillo, 3 - pétalos
-  int lifeTime = 180; // Tiempo de vida de la flor en segundos
+  Widget _buildPot(Flower flower) {
+    return Positioned(
+      left: flower.position.dx,
+      top: flower.position.dy,
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            flower.position = Offset(
+              flower.position.dx + details.delta.dx,
+              flower.position.dy + details.delta.dy,
+            );
+          });
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (flower.growthStage >= 3) _buildFlower(flower),
+            if (flower.growthStage >= 2) _buildStem(),
+            if (flower.growthStage >= 1) _buildPotShape(),
+          ],
+        ),
+      ),
+    );
+  }
 
-  Flower({required this.position});
-
-  // Función para hacer crecer la flor
-  void grow() {
-    if (growthStage < 3) {
-      growthStage++;
+  Widget _buildFlower(Flower flower) {
+    if (flower.growthStage == 3) {
+      return Container(
+        width: 50,
+        height: 50,
+        color: const Color.fromARGB(255, 238, 234, 236),
+        margin: EdgeInsets.only(bottom: 5),
+        child: Center(
+          child: Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color.fromARGB(255, 236, 240, 6),
+            ),
+          ),
+        ),
+      );
+    } else if (flower.growthStage == 2) {
+      return Container(
+        width: 30,
+        height: 30,
+        color: const Color.fromARGB(255, 231, 244, 54),
+        margin: EdgeInsets.only(bottom: 5),
+      );
+    } else {
+      return Container();
     }
   }
 
-  // Añadir tiempo de vida a la flor
-  void addLife(int seconds) {
-    lifeTime += seconds;
+  Widget _buildStem() {
+    return Container(
+      width: 10,
+      height: 30,
+      color: Colors.green,
+      margin: EdgeInsets.only(bottom: 5),
+    );
+  }
+
+  Widget _buildPotShape() {
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        color: const Color.fromARGB(255, 212, 59, 3),
+      ),
+      child: Center(
+        child: Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Positioned(
+      bottom: 20,
+      right: 20,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: Icon(Icons.opacity), // Ícono de regar
+            onPressed: () {
+              setState(() {
+                for (var flower in flowers) {
+                  if (flower.canWater) {
+                    flower.addWater(_wateringBoost, _wateringCooldown);
+                  }
+                }
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.local_florist), // Ícono de fertilizar
+            onPressed: () {
+              setState(() {
+                for (var flower in flowers) {
+                  if (flower.growthStage < 3 && !flower.hasFertilized) {
+                    flower.addFertilizer(_fertilizerBoost);
+                  }
+                }
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.delete), // Ícono de eliminar planta
+            onPressed: () {
+              setState(() {
+                flowers.clear();
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _startFlowerTimer(Flower flower) {
+    flower.timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        flower.life -= 1;
+        if (flower.life <= 0) {
+          flower.life = 0;
+          flowers.remove(flower);
+          timer.cancel();
+        }
+      });
+    });
+  }
+}
+
+class Flower {
+  Offset position;
+  int growthStage = 1; // Inicialmente crece desde la etapa 1
+  int life = 180; // Vida útil de 3 minutos en segundos
+  bool canWater = true;
+  bool hasFertilized = false;
+  Timer? timer;
+
+  Flower({required this.position});
+
+  void addWater(int boost, int cooldown) {
+    life = (life + boost).clamp(0, 180);
+    canWater = false;
+    Timer(Duration(seconds: cooldown), () {
+      canWater = true;
+    });
+  }
+
+  void addFertilizer(int boost) {
+    if (!hasFertilized) {
+      growthStage = (growthStage + boost).clamp(1, 3);
+      hasFertilized = true;
+    }
   }
 }
