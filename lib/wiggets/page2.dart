@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/wiggets/intro.dart';
 import 'package:provider/provider.dart';
 import 'aportes.dart';
 import 'basura.dart'; // Importa el widget BasuraGame
@@ -38,7 +39,7 @@ class _Page2State extends State<Page2> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Image.asset('assets/image/recoleccion.png', width: 500, height: 250),
+            child: Image.asset('assets/image/derr.png', width: 300, height: 150),
           ),
           SizedBox(height: 20),
           Padding(
@@ -53,7 +54,7 @@ class _Page2State extends State<Page2> {
 "Instala puntos de recolección en lugares clave: Ubica contenedores en áreas accesibles para facilitar la entrega de residuos reciclables"
 "Organiza eventos de limpieza comunitaria: Incentiva la participación de la comunidad en la recolección de desechos en espacios públicos"
               ,
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 13),
             ),
           ),
           SizedBox(height: 20),
@@ -73,7 +74,7 @@ class _Page2State extends State<Page2> {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => BasuraGame()),
+                MaterialPageRoute(builder: (context) => InstructionsPage ()),
               );
             },
             child: Text('Jugar al mini-juego'),
