@@ -44,8 +44,26 @@ class _Page4State extends State<Page4> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(
-              "Reciclaje: El reciclaje es el proceso de transformar materiales usados en nuevos productos, reduciendo así la necesidad de recursos naturales y minimizando los residuos. Al reciclar, ayudamos a conservar el medio ambiente, disminuimos la contaminación y promovemos la sostenibilidad.\n\n"
-              "¡Dame tus ideas! ¿Tienes ideas sobre cómo mejorar el reciclaje en tu comunidad o en tu vida diaria? Compártelas con nosotros y juntos hagamos una diferencia.",
+              "La Tierra no es una herencia de nuestros padres, es un préstamo de nuestros hijos."
+
+"Cada pequeño acto cuenta. Plantar un árbol hoy es asegurar un futuro más verde mañana."
+
+"Cuidar del planeta es cuidar de nuestro hogar, el único que tenemos."
+
+"El cambio climático es real, pero también lo es nuestra capacidad para detenerlo."
+
+"La naturaleza no nos necesita, nosotros necesitamos a la naturaleza. Protejámosla."
+
+"Reducir, reutilizar y reciclar no son solo acciones, son formas de cambiar el mundo."
+
+"Las grandes transformaciones comienzan con pequeños pasos. ¡Haz tu parte por el planeta!"
+
+"Tu huella en la Tierra puede ser pequeña, pero el impacto de tus acciones puede ser enorme."
+
+"El mejor momento para plantar un árbol fue hace 20 años. El segundo mejor momento es ahora."
+
+"Cada vez que reciclas, reduces la cantidad de residuos que el planeta tiene que soportar."
+              ,
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -63,14 +81,6 @@ class _Page4State extends State<Page4> {
             child: Text('Aportar'),
           ),
           SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => B()),
-              );
-            },
-            child: Text('Jugar al mini-juego'),
-          ),
         ],
       ),
     );

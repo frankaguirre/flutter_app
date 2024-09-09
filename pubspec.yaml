@@ -66,6 +66,7 @@ flutter:
     - assets/image/reciclaje.gif
     - assets/image/b.png
     - assets/image/arbol.png
+    - assets/image/r.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

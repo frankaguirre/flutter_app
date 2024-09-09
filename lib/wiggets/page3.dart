@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_10/wiggets/intro2.dart';
 import 'package:provider/provider.dart';
 import 'aportes.dart';
 
@@ -8,7 +9,7 @@ class Page3 extends StatefulWidget {
   _Page3State createState() => _Page3State();
 }
 
-class _Page2State extends State<Page3> {
+class _Page3State extends State<Page3> {
   final _ideasController = TextEditingController();
   final List<String> _ideas = [];
 
@@ -67,7 +68,7 @@ class _Page2State extends State<Page3> {
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => ()),
+                MaterialPageRoute(builder: (context) => IntroPage()),
               );
             },
             child: Text('Jugar al mini-juego'),

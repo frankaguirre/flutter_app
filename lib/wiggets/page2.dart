@@ -38,7 +38,7 @@ class _Page2State extends State<Page2> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Image.asset('assets/image/page2_image.png', width: 500, height: 250),
+            child: Image.asset('assets/image/r.png', width: 500, height: 250),
           ),
           SizedBox(height: 20),
           Padding(
