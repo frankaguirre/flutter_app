@@ -44,9 +44,9 @@ class _PotGamePageState extends State<PotGamePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildPotShape(),
-            if (flower.growthStage >= 2) _buildStem(),
-            if (flower.growthStage >= 3) _buildFlower(flower),
+            if (flower.growthStage >= 4) _buildFlower(flower), // La flor en la parte superior (etapa 4)
+            if (flower.growthStage >= 2) _buildStem(), // El tallo aparece en la etapa 2
+            _buildPotShape(flower.growthStage), // La maceta en la parte inferior desde el inicio
             _buildActionButtons(flower),
           ],
         ),
@@ -55,18 +55,39 @@ class _PotGamePageState extends State<PotGamePage> {
   }
 
   Widget _buildFlower(Flower flower) {
-    return Container(
-      width: flower.growthStage == 3 ? 50 : 30,
-      height: flower.growthStage == 3 ? 50 : 30,
-      color: flower.growthStage == 3 ? Color.fromARGB(255, 230, 124, 4) : Color.fromARGB(255, 231, 244, 54),
-      margin: EdgeInsets.only(bottom: 5),
-      child: flower.growthStage == 3 ? Center(
-        child: Container(
-          width: 10,
-          height: 10,
-          
-        ),
-      ) : null,
+    return Column(
+      children: [
+        if (flower.growthStage == 4) // Etapa 4: círculo amarillo
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.yellow, // Círculo amarillo en la etapa 4
+            ),
+            margin: EdgeInsets.only(bottom: 5),
+          ),
+        if (flower.growthStage == 5) // Etapa 5: círculo blanco alrededor
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white, // Círculo blanco alrededor en la etapa 5
+            ),
+            margin: EdgeInsets.only(bottom: 5),
+            child: Center(
+              child: Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.yellow, // Círculo amarillo dentro del blanco
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 
@@ -79,22 +100,21 @@ class _PotGamePageState extends State<PotGamePage> {
     );
   }
 
-  Widget _buildPotShape() {
+  Widget _buildPotShape(int growthStage) {
+    // Maceta marrón desde el inicio
+    Color potColor = Color.fromARGB(255, 139, 69, 19); // Color marrón
+
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
-        color: Color.fromARGB(255, 243, 240, 239),
+        color: potColor,
       ),
       child: Center(
         child: Container(
           width: 10,
           height: 10,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Color.fromARGB(255, 246, 250, 7),
-          ),
         ),
       ),
     );
@@ -156,8 +176,8 @@ class _PotGamePageState extends State<PotGamePage> {
 
 class Flower {
   Offset position;
-  int growthStage = 3; // Inicialmente con todos los componentes
-  int life = 180; // Vida útil de 3 minutos en segundos
+  int growthStage = 1; // Inicialmente solo con la maceta
+  int life = 240; // Vida útil de 3 minutos en segundos
   bool canWater = true;
   bool hasFertilized = false;
   Timer? timer;
@@ -175,15 +195,17 @@ class Flower {
   }
 
   void fertilize() {
-    growthStage = 3;
+    growthStage += 1; // Incrementa la etapa de crecimiento
     hasFertilized = true;
   }
 
   void _startFlowerTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      life -= 1;
+    // Incremento de las etapas de crecimiento cada 30 segundos
+    timer = Timer.periodic(Duration(seconds: 30), (timer) {
+      if (growthStage < 5) {
+        growthStage += 1;
+      }
       if (life <= 0) {
-        life = 0;
         timer.cancel();
       }
     });
