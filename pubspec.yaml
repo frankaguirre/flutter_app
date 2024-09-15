@@ -33,6 +33,7 @@ dependencies:
   font_awesome_flutter: ^10.0.0
   provider: ^6.0.3
   flutter_riverpod: ^1.0.0
+  flutter_launcher_icons: ^0.13.1
 
 http:
 
@@ -57,7 +58,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/image/logo.png"
+  image_path: "assets/image/sena.png"
 # The following section is specific to Flutter packages.
 flutter:
   assets:
