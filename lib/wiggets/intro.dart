@@ -1,5 +1,6 @@
+import 'package:Sena_conciencia_ambiental/wiggets/recolecion.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/wiggets/recolecion.dart';
+
 
 
 class InstructionsPage extends StatelessWidget {

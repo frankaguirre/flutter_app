@@ -1,6 +1,8 @@
+import 'package:Sena_conciencia_ambiental/wiggets/intro2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/wiggets/intro2.dart';
 import 'package:provider/provider.dart';
+
+
 import 'aportes.dart';
 
 
@@ -32,7 +34,7 @@ class _Page3State extends State<Page3> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Página 2 - Reciclaje'),
+        title: Text('Página 3 - Reforestar'),
         backgroundColor: Colors.green[700],
       ),
       body: Column(

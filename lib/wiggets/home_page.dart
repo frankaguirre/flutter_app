@@ -1,10 +1,11 @@
+import 'package:Sena_conciencia_ambiental/wiggets/home-page2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/wiggets/home-page2.dart';
+
 import 'page1.dart';
 import 'page2.dart';
 import 'page3.dart';
 import 'page4.dart';
-import 'package:flutter_application_10/wiggets/aportes.dart'; 
+
 
 class HomePage1 extends StatelessWidget {
   void _navigateToPage(BuildContext context, int index) {

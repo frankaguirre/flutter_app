@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_page.dart';
-import 'package:flutter_application_10/wiggets/aportes.dart';
+
 
 class CargaPage extends StatelessWidget {
   @override

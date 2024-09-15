@@ -1,5 +1,6 @@
+import 'package:Sena_conciencia_ambiental/wiggets/intro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/wiggets/intro.dart';
+
 import 'package:provider/provider.dart';
 import 'aportes.dart';
 import 'basura.dart'; // Importa el widget BasuraGame
