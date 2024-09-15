@@ -1,5 +1,6 @@
+import 'package:Sena_conciencia_ambiental/wiggets/carga_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/wiggets/carga_page.dart';
+
 
 
 class LoginPage extends StatefulWidget {

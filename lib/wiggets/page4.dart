@@ -31,7 +31,7 @@ class _Page4State extends State<Page4> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Página 2 - Reciclaje'),
+        title: Text('Página 4 - Motivacion'),
         backgroundColor: Colors.green[700],
       ),
       body: Column(

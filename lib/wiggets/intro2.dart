@@ -1,5 +1,6 @@
+import 'package:Sena_conciencia_ambiental/wiggets/reforestacion.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_10/wiggets/reforestacion.dart';
+
 
 class IntroPage extends StatelessWidget {
   @override
